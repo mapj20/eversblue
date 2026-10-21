@@ -28,11 +28,38 @@ try { saved = localStorage.getItem('lang') || (navigator.language.startsWith('es
 if (saved === 'es') setLang('es');
 langBtn.addEventListener('click', () => setLang(document.documentElement.lang === 'en' ? 'es' : 'en'));
 
-// Animación al hacer scroll
+// Animación al hacer scroll (al terminar se quita .reveal: su transform anulaba el hover y el clic de las tarjetas)
+function revealDone(ev) {
+  if (ev.target !== this) return;
+  this.classList.remove('reveal', 'is-visible');
+  this.removeEventListener('transitionend', revealDone);
+}
 const io = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); } });
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    e.target.addEventListener('transitionend', revealDone);
+    e.target.classList.add('is-visible');
+    io.unobserve(e.target);
+  });
 }, { threshold: 0.12 });
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+// Marcar en el menú la sección que se está viendo
+const navLinks = [...nav.querySelectorAll('a[href^="#"]')];
+function setActive(link) {
+  navLinks.forEach(a => {
+    a.classList.toggle('is-active', a === link);
+    if (a === link) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current');
+  });
+}
+const spy = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    const link = nav.querySelector(`a[href="#${e.target.id}"]`);
+    if (e.isIntersecting) setActive(link);
+    else if (link.classList.contains('is-active')) setActive(null);
+  });
+}, { rootMargin: '-40% 0px -55% 0px' });
+navLinks.forEach(a => spy.observe(document.querySelector(a.getAttribute('href'))));
 
 // Ocultar el WhatsApp flotante en Contacto (ya hay botones ahí y tapaba el de Fernando)
 const waFloat = document.querySelector('.wa-float');

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Page not found | EversBlue Restoration LLC</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#0a1f5c">
+  <!-- GitHub Pages sirve este 404 en cualquier ruta: fijar la base para que carguen estilos e imágenes -->
+  <script>
+    var base = document.createElement('base');
+    base.href = location.hostname.endsWith('github.io') ? '/' + location.pathname.split('/')[1] + '/' : '/';
+    document.head.appendChild(base);
+  </script>
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<main class="notfound" id="main">
+  <div class="hero__bg" aria-hidden="true"></div>
+  <div class="notfound__inner">
+    <a href="./" class="brand" aria-label="EversBlue Restoration – home">
+      <img src="assets/img/logo.jpg" alt="" width="44" height="40">
+      <span class="brand__text"><b>EVERS</b><b class="blue">BLUE</b><small>RESTORATION</small></span>
+    </a>
+    <p class="notfound__code metal">404</p>
+    <h1>Page not found</h1>
+    <p class="lead" lang="es">Página no encontrada</p>
+    <p class="notfound__text">The page you are looking for doesn't exist or was moved.<br><span lang="es">La página que busca no existe o cambió de dirección.</span></p>
+    <a class="btn btn--primary btn--lg" href="./">Back to home · Inicio</a>
+    <p class="notfound__call">Need help? · ¿Necesita ayuda? <a href="tel:+12032982089">203-298-2089</a></p>
+  </div>
+</main>
+
+</body>
+</html>
