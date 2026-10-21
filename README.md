@@ -21,6 +21,7 @@ assets/         → favicon e imágenes optimizadas
    - Registro **CNAME**: `www` → `<usuario>.github.io`
    - Registros **A** para el dominio raíz `@`: `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`
 3. Cuando el certificado esté listo, activar **Enforce HTTPS**.
+4. En `index.html`, cambiar `og:image` y `og:url` de `https://mapj20.github.io/eversblue/` al nuevo dominio (WhatsApp/Facebook necesitan la URL completa para mostrar la vista previa).
 
 ## Pendiente de confirmar con el cliente
 - Área de servicio (ciudades/condado) para mostrar en la página y mejorar SEO local.
