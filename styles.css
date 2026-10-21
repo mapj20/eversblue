@@ -15,6 +15,7 @@
   --shadow:0 20px 50px rgba(0,0,0,.35);
   --head:"Barlow Condensed",system-ui,sans-serif;
   --body:"Barlow",system-ui,sans-serif;
+  --ease:cubic-bezier(.32,.72,0,1);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;scroll-padding-top:80px}
@@ -55,7 +56,12 @@ a{color:inherit;text-decoration:none}
 .lang:hover{border-color:var(--blue-bright)}
 .lang:active{transform:scale(.96)}
 .menu-toggle{display:none;background:none;border:0;width:40px;height:40px;cursor:pointer;flex-direction:column;justify-content:center;gap:5px;padding:8px}
-.menu-toggle span{display:block;height:2px;background:#fff;border-radius:2px}
+.menu-toggle span{display:block;height:2px;background:#fff;border-radius:2px;transition:transform .5s var(--ease),opacity .3s var(--ease)}
+/* Las tres rayas se convierten en una X */
+.menu-toggle[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.menu-toggle[aria-expanded="true"] span:nth-child(2){opacity:0;transform:scaleX(0)}
+.menu-toggle[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+body.menu-open{overflow:hidden}
 
 /* ---- Hero ---- */
 .hero{position:relative;padding:72px 0 88px;overflow:hidden}
@@ -113,6 +119,14 @@ a{color:inherit;text-decoration:none}
 .steps h3{font-family:var(--head);text-transform:uppercase;font-size:1.35rem;color:#fff}
 .steps p{color:var(--muted)}
 
+/* ---- Lema: cada palabra pasa de apagada a encendida al hacer scroll ---- */
+.tagline{padding:120px 0;background:radial-gradient(60% 70% at 50% 50%,rgba(31,107,255,.14),transparent 70%),var(--navy-900)}
+.tagline__text{font-family:var(--head);font-weight:800;text-transform:uppercase;font-size:clamp(2.4rem,6vw,4.4rem);line-height:1;max-width:1100px;margin-inline:auto;text-align:center}
+.tagline__text .line{display:block;text-wrap:balance}
+.word{color:rgba(233,238,251,.2);transition:color .7s var(--ease),text-shadow .7s var(--ease)}
+.word.is-lit{color:var(--white)}
+.line--glow .word.is-lit{color:var(--blue-bright);text-shadow:0 0 30px rgba(56,182,255,.6)}
+
 /* ---- Contact ---- */
 .contact{background:radial-gradient(70% 80% at 50% 0%,rgba(31,107,255,.3),transparent 70%),var(--navy-900)}
 .contact__cta{justify-content:center;margin:-20px 0 44px}
@@ -153,9 +167,20 @@ a{color:inherit;text-decoration:none}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(37,211,102,.55)}70%{box-shadow:0 0 0 16px rgba(37,211,102,0)}100%{box-shadow:0 0 0 0 rgba(37,211,102,0)}}
 
 /* ---- Reveal on scroll ---- */
-.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
-.reveal.is-visible{opacity:1;transform:none}
-@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}.wa-float{animation:none}html{scroll-behavior:auto}}
+.reveal{opacity:0;transform:translateY(48px);filter:blur(8px);transition:opacity .9s var(--ease),transform .9s var(--ease),filter .9s var(--ease)}
+.reveal.is-visible{opacity:1;transform:none;filter:none}
+
+/* ---- Entrada del héroe al cargar (línea a línea) ---- */
+@keyframes rise{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}
+.hero .rise{animation:rise 1s var(--ease) both;animation-delay:calc(var(--i,0) * 110ms + 80ms)}
+
+@media (prefers-reduced-motion:reduce){
+  .reveal{opacity:1;transform:none;filter:none;transition:none}
+  .hero .rise{animation:none}
+  .word,.nav,.nav a,.menu-toggle span{transition:none}
+  .wa-float{animation:none}
+  html{scroll-behavior:auto}
+}
 
 /* ---- Responsive ---- */
 @media (max-width:1024px){
@@ -163,9 +188,16 @@ a{color:inherit;text-decoration:none}
   .contact__grid{grid-template-columns:1fr}
 }
 @media (max-width:860px){
-  .nav{position:fixed;inset:72px 0 auto 0;flex-direction:column;gap:0;background:var(--navy-900);border-bottom:1px solid rgba(255,255,255,.1);transform:translateY(-120%);transition:transform .3s;z-index:-1}
-  .nav.open{transform:none}
-  .nav a{padding:16px 24px;border-top:1px solid rgba(255,255,255,.06)}
+  /* Menú a pantalla completa: aparece con fundido y los enlaces suben en cascada */
+  .nav{position:fixed;top:72px;left:0;right:0;height:calc(100dvh - 72px);flex-direction:column;gap:0;padding:16px 0;background:var(--navy-900);opacity:0;visibility:hidden;transition:opacity .5s var(--ease),visibility 0s .5s;z-index:-1;overflow-y:auto}
+  .nav.open{opacity:1;visibility:visible;transition:opacity .5s var(--ease)}
+  .nav a{padding:18px 24px;font-size:2rem;border-top:1px solid rgba(255,255,255,.06);transition:opacity .6s var(--ease),transform .6s var(--ease),color .2s}
+  .nav:not(.open) a{opacity:0;transform:translateY(48px)}
+  .nav.open a:nth-child(1){transition-delay:.1s}
+  .nav.open a:nth-child(2){transition-delay:.15s}
+  .nav.open a:nth-child(3){transition-delay:.2s}
+  .nav.open a:nth-child(4){transition-delay:.25s}
+  .nav.no-anim,.nav.no-anim a{transition:none}
   .menu-toggle{display:flex}
   .header__actions .btn span{display:none}
   .header__actions .btn{padding:10px}
