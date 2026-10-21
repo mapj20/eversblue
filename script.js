@@ -17,6 +17,9 @@ function setLang(lang) {
   document.querySelectorAll('[data-en]').forEach(el => {
     el.innerHTML = el.dataset[lang];
   });
+  document.querySelectorAll('[data-aria-en]').forEach(el => {
+    el.setAttribute('aria-label', lang === 'en' ? el.dataset.ariaEn : el.dataset.ariaEs);
+  });
   langBtn.textContent = lang === 'en' ? 'ES' : 'EN';
   try { localStorage.setItem('lang', lang); } catch (e) {}
 }
@@ -30,6 +33,15 @@ const io = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); } });
 }, { threshold: 0.12 });
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+// Ocultar el WhatsApp flotante en Contacto (ya hay botones ahí y tapaba el de Fernando)
+const waFloat = document.querySelector('.wa-float');
+const waZones = new Set();
+const waIo = new IntersectionObserver(entries => {
+  entries.forEach(e => e.isIntersecting ? waZones.add(e.target) : waZones.delete(e.target));
+  waFloat.classList.toggle('is-hidden', waZones.size > 0);
+});
+document.querySelectorAll('#contact, .footer').forEach(el => waIo.observe(el));
 
 // Año del footer
 document.getElementById('year').textContent = new Date().getFullYear();
